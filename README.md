@@ -1,5 +1,5 @@
-Apt Autoupdate
-==============
+Apt
+===
 
 [![Build Status](https://travis-ci.org/plainprogrammer/puppet-apt.png)](https://travis-ci.org/plainprogrammer/puppet-apt)
 
