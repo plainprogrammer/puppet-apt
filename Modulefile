@@ -1,10 +1,10 @@
-name    'bare_module'
+name    'apt_autoupdate'
 version '0.1.0'
-source 'git://github.com/plainprogrammer/bare_module'
+source 'git://github.com/plainprogrammer/puppet-apt_autoupdate'
 author 'James Thompson'
 license 'MIT'
-summary 'Bare Module'
-description 'A Bare Module, Ready for Development'
-project_page 'http://github.com/plainprogrammer/bare_module'
+summary 'Apt Automatic Update module'
+description 'A module to manage automatic updates on Apt-based systems.'
+project_page 'http://github.com/plainprogrammer/puppet-apt_autoupdate'
 
 ## Add dependencies, if any:
