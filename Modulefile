@@ -1,5 +1,5 @@
 name    'plainprogrammer-apt'
-version '0.2.0'
+version '0.3.0'
 source 'git://github.com/plainprogrammer/puppet-apt'
 author 'James Thompson'
 license 'MIT'

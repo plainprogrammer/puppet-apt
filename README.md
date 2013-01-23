@@ -36,6 +36,10 @@ Usage
         report_from    => 'autoupdate@example.org',
         download_limit => '256',
     }
+    
+If you want to run an 'apt-get update':
+
+    include apt::update
 
 Contributing
 ------------
