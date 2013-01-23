@@ -1,77 +1,51 @@
-# Class: apt_autoupdate
+# Class: apt
 #
-#   This module manages automatic updates on apt-based systems.
-#
-#   James Thompson <jamest@thereadyproject.com>
-#   2013-01-22
-#
-#   Tested platforms:
-#    - Ubuntu 12.04 LTS (32 & 64)
+#   This class allows for the management of various Apt related features,
+#   including managing unattended-updates and apticron.
 #
 # Parameters:
 #
-#   $origins = ["${lsbdistid}:${lsbdistcodename}-security"]
-#     Origins to include in unattended upgrades. By default this module will
-#     include the appropriate security origin for your system. Any value set
-#     for this parameter should be exhaustive, as not defaults will be
-#     interpolated.
+#  [*origins*] - Origins to include in unattended upgrades. By default this
+#                module will include the appropriate security origin for your
+#                system. Any value set for this parameter should be exhaustive,
+#                as not defaults will be interpolated.
 #
-#   $package_blacklist = []
-#     Packages to exclude from unattended upgrades.
+#  [*package_blacklist*] - Packages to exclude from unattended upgrades.
 #
-#   $report_to = 'admin@example.org'
-#     Email address that upgrade and apticron reports should go to.
+#  [*report_to*] - Email address that upgrade and apticron reports should go
+#                  to.
 #
-#   $report_from = 'nobody@example.org',
-#     Email address that upgrade and apticron reports should come from.
+#  [*report_from*] - Email address that upgrade and apticron reports should
+#                    come from.
 #
-#   $download_limit = '128'
-#     Download limit to impose on update process, in kb/s.
+#  [*download_limit*] - Download limit to impose on update process, in kb/s.
 #
-#   $autoupdate = false
-#     Whether to update the required packages automatically.
-#
-#
-# Actions:
-#
-#  Installs, configures, and manages automatic updates on apt-based systems.
-#
-# Requires:
+#  [*use_latest*] - Whether to update the required packages automatically.
 #
 # Sample Usage:
 #
-#   class { "apt_autoupdate":
+#   class { 'apt':
 #     report_to      => 'admin@example.org',
 #     report_from    => 'autoupdate@example.org',
 #     download_limit => '256',
 #   }
 #
-# [Remember: No empty lines between comments and class definition]
-class apt_autoupdate(
-  $origins=["${::lsbdistid}:${::lsbdistcodename}-security"],
-  $package_blacklist=[],
-  $report_to='nobody',
-  $report_from='nobody',
-  $download_limit='128',
-  $autoupdate=false,
-  $enable=true,
-  $ensure='running'
+class apt(
+  $origins            = undef,
+  $package_blacklist  = undef,
+  $report_to          = undef,
+  $report_from        = undef,
+  $download_limit     = undef,
+  $use_latest         = undef
 ) {
 
-  if $report_to == 'nobody' {
-    fail('report_to parameter must be set to an email address')
-  }
-
-  if $report_to == 'nobody' {
-    fail('report_from parameter must be set to an email address')
-  }
-
-  if $autoupdate == true {
-    $package_ensure = latest
-  } elsif $autoupdate == false {
-    $package_ensure = present
-  } else {
-    fail('autoupdate parameter must be true or false')
+  class { 'apt::params':
+    origins           => $origins,
+    package_blacklist => $package_blacklist,
+    report_to         => $report_to,
+    report_from       => $report_from,
+    download_limit    => $download_limit,
+    use_latest        => $use_latest
   }
 
   case $::osfamily {
@@ -85,16 +59,16 @@ class apt_autoupdate(
       $apticron_config_tpl    = 'apticron.conf.erb'
     }
     default: {
-      fail("The ${module_name} module is not supported on ${::osfamily} based systems")
+      fail("The apt module is not supported on ${::osfamily} based systems")
     }
   }
 
   package {'unattended-upgrades':
-    ensure  => $package_ensure,
+    ensure  => $apt::params::package_ensure,
   }
 
   package {'apticron':
-    ensure  => $package_ensure,
+    ensure  => $apt::params::package_ensure,
   }
 
   file { $periodic_config:

@@ -1,12 +1,16 @@
 Unattended-Upgrade::Allowed-Origins {
-<% @origins.each do |origin| %>
+<% unless @origins.nil? %>
+  <% @origins.each do |origin| %>
   "<%= origin %>";
-<% end %>
+  <% end %>
+<% end%>
 };
 
 Unattended-Upgrade::Package-Blacklist {
-<% @package_blacklist.each do |package| %>
+<% unless @package_blacklist.nil? %>
+  <% @package_blacklist.each do |package| %>
   "<%= package %>";
+  <% end %>
 <% end %>
 };
 

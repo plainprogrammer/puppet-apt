@@ -1,5 +1,5 @@
-class { 'apt_autoupdate':
+class { 'apt':
   report_to   => 'nobody@example.org',
   report_from => 'nobody@example.org',
-  autoupdate  => true,
+  use_latest  => true,
 }
