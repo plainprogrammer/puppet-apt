@@ -1,4 +1,4 @@
-name    'apt_autoupdate'
+name    'plainprogrammer-apt_autoupdate'
 version '0.1.0'
 source 'git://github.com/plainprogrammer/puppet-apt_autoupdate'
 author 'James Thompson'
