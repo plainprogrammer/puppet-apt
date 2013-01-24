@@ -7,8 +7,6 @@ describe 'apt' do
   let(:params) { required_params.merge({}) }
   let(:facts) { { :osfamily => 'debian', :lsbdistid => 'Ubuntu', :lsbdistcodename => 'precise' } }
 
-  it { should include_class('apt::params') }
-
   it { should contain_package('unattended-upgrades').with_ensure('present') }
   it { should contain_package('apticron').with_ensure('present') }
 

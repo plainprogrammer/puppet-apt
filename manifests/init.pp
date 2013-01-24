@@ -30,22 +30,28 @@
 #     download_limit => '256',
 #   }
 #
-class apt(
+class apt (
   $origins            = undef,
   $package_blacklist  = undef,
   $report_to          = undef,
   $report_from        = undef,
-  $download_limit     = undef,
-  $use_latest         = undef
+  $download_limit     = '128',
+  $use_latest         = false
 ) {
+  if $report_to == undef {
+    fail('report_to parameter must be set to an email address')
+  }
 
-  class { 'apt::params':
-    origins           => $origins,
-    package_blacklist => $package_blacklist,
-    report_to         => $report_to,
-    report_from       => $report_from,
-    download_limit    => $download_limit,
-    use_latest        => $use_latest
+  if $report_to == undef {
+    fail('report_from parameter must be set to an email address')
+  }
+
+  if $use_latest == true {
+    $package_ensure = latest
+  } elsif $use_latest == false {
+    $package_ensure = present
+  } else {
+    fail('use_latest parameter must be true or false')
   }
 
   case $::osfamily {
@@ -64,11 +70,11 @@ class apt(
   }
 
   package {'unattended-upgrades':
-    ensure  => $apt::params::package_ensure,
+    ensure  => $package_ensure,
   }
 
   package {'apticron':
-    ensure  => $apt::params::package_ensure,
+    ensure  => $package_ensure,
   }
 
   file { $periodic_config:
@@ -77,7 +83,7 @@ class apt(
     group   => 0,
     mode    => '0644',
     content => template("${module_name}/${periodic_config_tpl}"),
-    require => Package[unattended-upgrades],
+    require => Package['unattended-upgrades'],
   }
 
   file { $unattended_config:
@@ -86,7 +92,7 @@ class apt(
     group   => 0,
     mode    => '0644',
     content => template("${module_name}/${unattended_config_tpl}"),
-    require => Package[unattended-upgrades],
+    require => Package['unattended-upgrades'],
   }
 
   file { $apticron_config:
@@ -95,6 +101,6 @@ class apt(
     group   => 0,
     mode    => '0644',
     content => template("${module_name}/${apticron_config_tpl}"),
-    require => Package[apticron],
+    require => Package['apticron'],
   }
 }
