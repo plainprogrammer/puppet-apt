@@ -55,7 +55,7 @@ class apt (
   }
 
   case $::osfamily {
-    Debian: {
+    /Debian/: {
       $supported              = true
       $periodic_config        = '/etc/apt/apt.conf.d/10periodic'
       $periodic_config_tpl    = 'periodic.erb'
